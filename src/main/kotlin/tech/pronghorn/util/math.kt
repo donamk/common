@@ -11,3 +11,5 @@ fun roundToPowerOfTwo(value: Int): Int {
     }
     return 1 shl 32 - Integer.numberOfLeadingZeros(value - 1)
 }
+
+fun isPowerOfTwo(value: Int): Boolean = value == roundToPowerOfTwo(value)
