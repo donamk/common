@@ -5,7 +5,8 @@ import java.time.Duration
 private val defaultEventually: Duration = Duration.ofSeconds(1)
 private val interval: Duration = Duration.ofMillis(10)
 
-fun eventually(duration: Duration = defaultEventually, block: () -> Unit): Unit {
+fun eventually(duration: Duration = defaultEventually,
+               block: () -> Unit) {
     val end = System.nanoTime() + (duration.seconds * 1000000000L) + duration.nano
     val millis = (interval.nano / 1000000).toLong()
     var times = 0

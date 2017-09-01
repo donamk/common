@@ -13,7 +13,7 @@ fun SocketChannel.write(string: String) {
     assert(write(buffer) == byteArray.size)
 }
 
-fun runAllIgnoringExceptions(vararg blocks: () -> Unit): Unit {
+fun runAllIgnoringExceptions(vararg blocks: () -> Unit) {
     blocks.forEach { block ->
         try {
             block()
