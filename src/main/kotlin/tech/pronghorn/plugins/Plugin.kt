@@ -27,11 +27,11 @@ abstract class Plugin<T>(private val default: T,
         try {
             val stream = javaClass.classLoader.getResource(PRONGHORN_PROPERTIES)?.openStream()
             if (stream != null) {
-                logger.info("Loading config file $PRONGHORN_PROPERTIES")
+                logger.debug { "Loading config file $PRONGHORN_PROPERTIES" }
                 properties.load(stream)
             }
         }
-        catch(ex: Exception) {
+        catch (ex: Exception) {
             // no-op
         }
 
@@ -41,21 +41,23 @@ abstract class Plugin<T>(private val default: T,
                 val clazz = Class.forName(pluginClassName)
                 if (clazz.interfaces.find { it == type } != null) {
                     val instance = clazz.kotlin.objectInstance
-                    logger.info("Loading plugin ${type.typeName} implementation : ${clazz.name}")
+                    logger.debug { "Loading plugin ${type.typeName} implementation : ${clazz.name}" }
                     if (instance != null) {
                         return instance as T
-                    } else {
+                    }
+                    else {
                         return clazz.newInstance() as T
                     }
                 }
-            } catch (ex: Exception) {
-                logger.error("Failed to load plugin ${type.typeName} : ${ex.javaClass.simpleName} ${ex.message}")
-                logger.warn("Falling back to default for ${type.typeName}")
+            }
+            catch (ex: Exception) {
+                logger.error { "Failed to load plugin ${type.typeName} : ${ex.javaClass.simpleName} ${ex.message}" }
+                logger.warn { "Falling back to default for ${type.typeName}" }
                 return default
             }
         }
 
-        logger.info("Loading plugin ${type.typeName} default implementation")
+        logger.debug { "Loading plugin ${type.typeName} default implementation" }
         return default
     }
 }

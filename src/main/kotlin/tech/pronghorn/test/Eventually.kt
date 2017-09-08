@@ -1,4 +1,4 @@
-package tech.pronghorn.util
+package tech.pronghorn.test
 
 import java.time.Duration
 
