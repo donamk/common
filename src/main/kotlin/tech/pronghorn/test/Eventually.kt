@@ -7,11 +7,11 @@ private val interval: Duration = Duration.ofMillis(10)
 
 fun eventually(duration: Duration = defaultEventually,
                block: () -> Unit) {
-    val end = System.nanoTime() + (duration.seconds * 1000000000L) + duration.nano
-    val millis = (interval.nano / 1000000).toLong()
+    val end = System.currentTimeMillis() + duration.toMillis()
+
     var times = 0
     var lastException: Throwable? = null
-    while (System.nanoTime() < end) {
+    while (System.currentTimeMillis() < end) {
         try {
             block()
             return
@@ -24,7 +24,7 @@ fun eventually(duration: Duration = defaultEventually,
             lastException = ex
             // ignore and proceed
         }
-        Thread.sleep(millis)
+        Thread.sleep(interval.toMillis())
 
         times++
     }
