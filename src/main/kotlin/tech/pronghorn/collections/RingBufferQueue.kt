@@ -3,7 +3,8 @@ package tech.pronghorn.collections
 import tech.pronghorn.plugins.logging.LoggingPlugin
 import tech.pronghorn.util.isPowerOfTwo
 import tech.pronghorn.util.roundToNextPowerOfTwo
-import java.util.*
+import java.util.NoSuchElementException
+import java.util.Queue
 
 class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
     private val logger = LoggingPlugin.get(javaClass)

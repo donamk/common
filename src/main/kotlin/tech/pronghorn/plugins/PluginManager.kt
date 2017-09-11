@@ -13,29 +13,39 @@ import tech.pronghorn.plugins.mpscQueue.MpscQueuePlugin
 import tech.pronghorn.plugins.spscQueue.SpscQueuePlugin
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
-import java.util.*
+import java.util.Properties
 
 internal object PluginManager {
     private val properties = loadProperties()
 
-    @Volatile var loggingPlugin: LoggingPlugin = BootstrapLoggingPlugin
+    @Volatile
+    var loggingPlugin: LoggingPlugin = BootstrapLoggingPlugin
         private set
+
     init {
         loggingPlugin = loadPlugin(LoggingPlugin)
     }
-    @Volatile var arrayHasherPlugin: ArrayHasherPlugin = loadPlugin(ArrayHasherPlugin)
+
+    @Volatile
+    var arrayHasherPlugin: ArrayHasherPlugin = loadPlugin(ArrayHasherPlugin)
         private set
-    @Volatile var concurrentMapPlugin: ConcurrentMapPlugin = loadPlugin(ConcurrentMapPlugin)
+    @Volatile
+    var concurrentMapPlugin: ConcurrentMapPlugin = loadPlugin(ConcurrentMapPlugin)
         private set
-    @Volatile var concurrentSetPlugin: ConcurrentSetPlugin = loadPlugin(ConcurrentSetPlugin)
+    @Volatile
+    var concurrentSetPlugin: ConcurrentSetPlugin = loadPlugin(ConcurrentSetPlugin)
         private set
-    @Volatile var internalQueuePlugin: InternalQueuePlugin = loadPlugin(InternalQueuePlugin)
+    @Volatile
+    var internalQueuePlugin: InternalQueuePlugin = loadPlugin(InternalQueuePlugin)
         private set
-    @Volatile var mpmcQueuePlugin: MpmcQueuePlugin = loadPlugin(MpmcQueuePlugin)
+    @Volatile
+    var mpmcQueuePlugin: MpmcQueuePlugin = loadPlugin(MpmcQueuePlugin)
         private set
-    @Volatile var mpscQueuePlugin: MpscQueuePlugin = loadPlugin(MpscQueuePlugin)
+    @Volatile
+    var mpscQueuePlugin: MpscQueuePlugin = loadPlugin(MpscQueuePlugin)
         private set
-    @Volatile var spscQueuePlugin: SpscQueuePlugin = loadPlugin(SpscQueuePlugin)
+    @Volatile
+    var spscQueuePlugin: SpscQueuePlugin = loadPlugin(SpscQueuePlugin)
         private set
 
     private fun loadProperties(): Properties {
@@ -83,7 +93,7 @@ internal object PluginManager {
     }
 
     fun setPlugin(plugin: Any): Boolean {
-        when(plugin){
+        when (plugin) {
             is LoggingPlugin -> loggingPlugin = plugin
             is ArrayHasherPlugin -> arrayHasherPlugin = plugin
             is ConcurrentMapPlugin -> concurrentMapPlugin = plugin

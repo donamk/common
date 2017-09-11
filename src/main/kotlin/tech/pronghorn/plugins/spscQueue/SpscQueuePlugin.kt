@@ -2,7 +2,7 @@ package tech.pronghorn.plugins.spscQueue
 
 import tech.pronghorn.plugins.Plugin
 import tech.pronghorn.plugins.PluginManager
-import java.util.*
+import java.util.Queue
 
 interface SpscQueuePlugin {
     companion object : Plugin<SpscQueuePlugin>(SpscQueueDefaultPlugin) {

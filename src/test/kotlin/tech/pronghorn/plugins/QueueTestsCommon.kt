@@ -1,6 +1,6 @@
 package tech.pronghorn.plugins
 
-import java.util.*
+import java.util.Queue
 
 class Producer(val count: Int,
                val queue: Queue<Int>) : Thread() {

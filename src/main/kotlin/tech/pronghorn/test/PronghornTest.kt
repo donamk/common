@@ -1,7 +1,7 @@
 package tech.pronghorn.test
 
 import tech.pronghorn.plugins.logging.LoggingPlugin
-import java.util.*
+import java.util.Random
 
 const val repeatCount: Int = 1
 

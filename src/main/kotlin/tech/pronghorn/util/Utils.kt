@@ -26,7 +26,7 @@ fun runAllIgnoringExceptions(vararg blocks: () -> Unit) {
         try {
             block()
         }
-        catch(ex: Exception) {
+        catch (ex: Exception) {
             // no-op
         }
     }

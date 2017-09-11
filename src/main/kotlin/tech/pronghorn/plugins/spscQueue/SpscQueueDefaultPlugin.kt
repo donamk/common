@@ -1,6 +1,6 @@
 package tech.pronghorn.plugins.spscQueue
 
-import java.util.*
+import java.util.Queue
 import java.util.concurrent.ArrayBlockingQueue
 
 object SpscQueueDefaultPlugin : SpscQueuePlugin {
