@@ -1,11 +1,12 @@
 package tech.pronghorn.collections
 
+import tech.pronghorn.plugins.logging.LoggingPlugin
 import tech.pronghorn.util.isPowerOfTwo
 import tech.pronghorn.util.roundToNextPowerOfTwo
 import java.util.*
 
 class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
-    private val logger = mu.KotlinLogging.logger {}
+    private val logger = LoggingPlugin.get(javaClass)
     val capacity: Int = validateCapacity(requestedCapacity)
     @Suppress("UNCHECKED_CAST")
     private val ring: Array<T?> = Array<Any?>(capacity, { null }) as Array<T?>
@@ -14,6 +15,10 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
     private var write = 0
     override val size: Int
         get() = write - read
+    val isFull: Boolean
+        get() = size == capacity
+    val remaining: Int
+        get() = capacity - size
 
     private fun validateCapacity(value: Int): Int {
         if (isPowerOfTwo(value)) {
@@ -26,7 +31,7 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
     }
 
     override fun remove(): T {
-        if (read == write) {
+        if (isEmpty()) {
             throw NoSuchElementException()
         }
         else {
@@ -36,7 +41,7 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
     }
 
     override fun contains(element: T?): Boolean {
-        val length = write - read
+        val length = size
         var x = 0
         while (x < length) {
             if (ring[(read + x).and(mask)] == element) {
@@ -59,10 +64,8 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
 
     override fun isEmpty(): Boolean = write == read
 
-    fun isFull(): Boolean = write - read == capacity
-
     override fun addAll(elements: Collection<T>): Boolean {
-        if (write - read < elements.size) {
+        if (remaining < elements.size) {
             return false
         }
 
@@ -75,7 +78,7 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
     }
 
     override fun clear() {
-        while (read < write) {
+        while (size > 0) {
             ring[read.and(mask)] = null
             read += 1
         }
@@ -84,7 +87,7 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
     }
 
     override fun offer(element: T?): Boolean {
-        if (isFull()) {
+        if (isFull) {
             return false
         }
 
@@ -102,7 +105,7 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
     }
 
     override fun add(element: T?): Boolean {
-        if (isFull()) {
+        if (isFull) {
             throw IllegalStateException()
         }
 
@@ -112,21 +115,21 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
     }
 
     override fun peek(): T? {
-        if (isEmpty()) {
-            return null
+        return if (isEmpty()) {
+            null
         }
         else {
-            return ring[read.and(mask)]
+            ring[read.and(mask)]
         }
     }
 
     override fun poll(): T? {
-        if (isEmpty()) {
-            return null
+        return if (isEmpty()) {
+            null
         }
         else {
             read += 1
-            return ring[(read - 1).and(mask)]
+            ring[(read - 1).and(mask)]
         }
     }
 

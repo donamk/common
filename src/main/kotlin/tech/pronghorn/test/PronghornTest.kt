@@ -1,12 +1,12 @@
 package tech.pronghorn.test
 
-import mu.KotlinLogging
+import tech.pronghorn.plugins.logging.LoggingPlugin
 import java.util.*
 
 const val repeatCount: Int = 1
 
 abstract class PronghornTest(val forcedSeed: Long? = null) {
-    protected val logger = KotlinLogging.logger(this.javaClass.name)
+    protected val logger = LoggingPlugin.get(javaClass)
 
     val random by lazy {
         val seed = forcedSeed ?: Random().nextLong()
