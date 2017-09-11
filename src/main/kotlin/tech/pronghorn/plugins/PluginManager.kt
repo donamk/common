@@ -58,7 +58,7 @@ internal object PluginManager {
         val logger = LoggingPlugin.get(javaClass)
         val type: Type = (plugin.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0]
         val pluginName = type.typeName.replaceBeforeLast('.', "").replace(".", "")
-        val pluginClassName = properties.getProperty("${PRONGHORN_PLUGIN_PREFIX}.$pluginName")
+        val pluginClassName = properties.getProperty("$PRONGHORN_PLUGIN_PREFIX.$pluginName")
         if (pluginClassName != null) {
             try {
                 val clazz = Class.forName(pluginClassName)
