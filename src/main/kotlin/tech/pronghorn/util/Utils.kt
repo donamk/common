@@ -15,6 +15,18 @@ fun SocketChannel.write(string: String) {
     assert(write(buffer) == byteArray.size)
 }
 
+fun ByteBuffer.sliceToArray(start: Int,
+                            length: Int): ByteArray {
+    val slice = ByteArray(length)
+    val prePosition = position()
+    if (prePosition != start) {
+        position(start)
+    }
+    get(slice)
+    position(prePosition)
+    return slice
+}
+
 fun Exception.stackTraceToString(): String {
     val exceptionWriter = StringWriter()
     printStackTrace(PrintWriter(exceptionWriter))
