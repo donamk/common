@@ -1,3 +1,19 @@
+/*
+ * Copyright 2017 Pronghorn Technology LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package tech.pronghorn.plugins
 
 import tech.pronghorn.PRONGHORN_PLUGIN_PREFIX
@@ -6,8 +22,7 @@ import tech.pronghorn.plugins.arrayHash.ArrayHasherPlugin
 import tech.pronghorn.plugins.concurrentMap.ConcurrentMapPlugin
 import tech.pronghorn.plugins.concurrentSet.ConcurrentSetPlugin
 import tech.pronghorn.plugins.internalQueue.InternalQueuePlugin
-import tech.pronghorn.plugins.logging.BootstrapLoggingPlugin
-import tech.pronghorn.plugins.logging.LoggingPlugin
+import tech.pronghorn.plugins.logging.*
 import tech.pronghorn.plugins.mpmcQueue.MpmcQueuePlugin
 import tech.pronghorn.plugins.mpscQueue.MpscQueuePlugin
 import tech.pronghorn.plugins.spscQueue.SpscQueuePlugin
@@ -23,7 +38,12 @@ internal object PluginManager {
         private set
 
     init {
-        loggingPlugin = loadPlugin(LoggingPlugin)
+        val postBootstrapLoggingPlugin = loadPlugin(LoggingPlugin)
+        if(postBootstrapLoggingPlugin is LoggingDefaultPlugin){
+            val logger = LoggingPlugin.get(javaClass)
+            logger.warn { "No Pronghorn logging plug-in detected, falling back to default no-op logger. Include or implement a logging plugin to enable logging." }
+        }
+        loggingPlugin = postBootstrapLoggingPlugin
     }
 
     @Volatile
