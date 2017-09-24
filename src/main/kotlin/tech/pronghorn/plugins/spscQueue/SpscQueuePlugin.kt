@@ -22,8 +22,12 @@ import java.util.Queue
 
 interface SpscQueuePlugin {
     companion object : Plugin<SpscQueuePlugin>(SpscQueueDefaultPlugin) {
-        fun <T> get(capacity: Int): Queue<T> = PluginManager.spscQueuePlugin.get(capacity)
+        fun <T> getBounded(capacity: Int): Queue<T> = PluginManager.spscQueuePlugin.getBounded(capacity)
+
+        fun <T> getUnbounded(): Queue<T> = PluginManager.spscQueuePlugin.getUnbounded()
     }
 
-    fun <T> get(capacity: Int): Queue<T>
+    fun <T> getBounded(capacity: Int): Queue<T>
+
+    fun <T> getUnbounded(): Queue<T>
 }

@@ -22,8 +22,12 @@ import java.util.Queue
 
 interface MpscQueuePlugin {
     companion object : Plugin<MpscQueuePlugin>(MpscQueueDefaultPlugin) {
-        fun <T> get(capacity: Int): Queue<T> = PluginManager.mpscQueuePlugin.get(capacity)
+        fun <T> getBounded(capacity: Int): Queue<T> = PluginManager.mpscQueuePlugin.getBounded(capacity)
+
+        fun <T> getUnbounded(): Queue<T> = PluginManager.mpscQueuePlugin.getUnbounded()
     }
 
-    fun <T> get(capacity: Int): Queue<T>
+    fun <T> getBounded(capacity: Int): Queue<T>
+
+    fun <T> getUnbounded(): Queue<T>
 }

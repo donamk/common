@@ -22,8 +22,12 @@ import java.util.Queue
 
 interface InternalQueuePlugin {
     companion object : Plugin<InternalQueuePlugin>(InternalQueueDefaultPlugin) {
-        fun <T> get(capacity: Int): Queue<T> = PluginManager.internalQueuePlugin.get(capacity)
+        fun <T> getBounded(capacity: Int): Queue<T> = PluginManager.internalQueuePlugin.getBounded(capacity)
+
+        fun <T> getUnbounded(): Queue<T> = PluginManager.internalQueuePlugin.getUnbounded()
     }
 
-    fun <T> get(capacity: Int): Queue<T>
+    fun <T> getBounded(capacity: Int): Queue<T>
+
+    fun <T> getUnbounded(): Queue<T>
 }

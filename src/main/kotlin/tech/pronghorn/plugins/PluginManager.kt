@@ -23,7 +23,6 @@ import tech.pronghorn.plugins.concurrentMap.ConcurrentMapPlugin
 import tech.pronghorn.plugins.concurrentSet.ConcurrentSetPlugin
 import tech.pronghorn.plugins.internalQueue.InternalQueuePlugin
 import tech.pronghorn.plugins.logging.*
-import tech.pronghorn.plugins.mpmcQueue.MpmcQueuePlugin
 import tech.pronghorn.plugins.mpscQueue.MpscQueuePlugin
 import tech.pronghorn.plugins.spscQueue.SpscQueuePlugin
 import java.lang.reflect.ParameterizedType
@@ -57,9 +56,6 @@ internal object PluginManager {
         private set
     @Volatile
     var internalQueuePlugin: InternalQueuePlugin = loadPlugin(InternalQueuePlugin)
-        private set
-    @Volatile
-    var mpmcQueuePlugin: MpmcQueuePlugin = loadPlugin(MpmcQueuePlugin)
         private set
     @Volatile
     var mpscQueuePlugin: MpscQueuePlugin = loadPlugin(MpscQueuePlugin)
@@ -119,7 +115,6 @@ internal object PluginManager {
             is ConcurrentMapPlugin -> concurrentMapPlugin = plugin
             is ConcurrentSetPlugin -> concurrentSetPlugin = plugin
             is InternalQueuePlugin -> internalQueuePlugin = plugin
-            is MpmcQueuePlugin -> mpmcQueuePlugin = plugin
             is MpscQueuePlugin -> mpscQueuePlugin = plugin
             is SpscQueuePlugin -> spscQueuePlugin = plugin
             else -> return false

@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.RepeatedTest
 import tech.pronghorn.plugins.Consumer
 import tech.pronghorn.plugins.Producer
-import tech.pronghorn.plugins.mpmcQueue.MpmcQueuePlugin
 import tech.pronghorn.test.PronghornTest
 import tech.pronghorn.test.repeatCount
 import tech.pronghorn.util.roundToNextPowerOfTwo
@@ -32,7 +31,7 @@ class MpscQueuePluginTests : PronghornTest() {
     @RepeatedTest(repeatCount)
     fun mpscQueuePluginBounded() {
         val capacity = roundToNextPowerOfTwo(4 + random.nextInt(64))
-        val queue = MpscQueuePlugin.get<String>(capacity)
+        val queue = MpscQueuePlugin.getBounded<String>(capacity)
 
         var x = 0
         while (x < capacity) {
@@ -50,7 +49,7 @@ class MpscQueuePluginTests : PronghornTest() {
     @RepeatedTest(repeatCount)
     fun mpscQueuePluginThreadSafe() {
         val capacity = 64
-        val queue = MpmcQueuePlugin.get<Int>(capacity)
+        val queue = MpscQueuePlugin.getBounded<Int>(capacity)
 
         val toConsume = capacity
         val toProduce = capacity / 2

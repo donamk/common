@@ -18,9 +18,14 @@ package tech.pronghorn.plugins.mpscQueue
 
 import java.util.Queue
 import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.LinkedBlockingQueue
 
 object MpscQueueDefaultPlugin : MpscQueuePlugin {
-    override fun <T> get(capacity: Int): Queue<T> {
+    override fun <T> getBounded(capacity: Int): Queue<T> {
         return ArrayBlockingQueue(capacity)
+    }
+
+    override fun <T> getUnbounded(): Queue<T> {
+        return LinkedBlockingQueue()
     }
 }
