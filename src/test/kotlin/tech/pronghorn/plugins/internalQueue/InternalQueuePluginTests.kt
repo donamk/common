@@ -30,7 +30,7 @@ class InternalQueuePluginTests : PronghornTest() {
     @RepeatedTest(repeatCount)
     fun internalQueuePluginBounded() {
         val capacity = roundToNextPowerOfTwo(4 + random.nextInt(64))
-        val queue = InternalQueuePlugin.get<String>(capacity)
+        val queue = InternalQueuePlugin.getBounded<String>(capacity)
 
         var x = 0
         while (x < capacity) {

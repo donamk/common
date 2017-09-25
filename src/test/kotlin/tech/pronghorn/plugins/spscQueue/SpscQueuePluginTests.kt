@@ -31,7 +31,7 @@ class SpscQueuePluginTests : PronghornTest() {
     @RepeatedTest(repeatCount)
     fun spscQueuePluginBounded() {
         val capacity = roundToNextPowerOfTwo(4 + random.nextInt(64))
-        val queue = SpscQueuePlugin.get<String>(capacity)
+        val queue = SpscQueuePlugin.getBounded<String>(capacity)
 
         var x = 0
         while (x < capacity) {
@@ -49,7 +49,7 @@ class SpscQueuePluginTests : PronghornTest() {
     @RepeatedTest(repeatCount)
     fun spscQueuePluginThreadSafe() {
         val capacity = 64
-        val queue = SpscQueuePlugin.get<Int>(capacity)
+        val queue = SpscQueuePlugin.getBounded<Int>(capacity)
 
         val consumer = Consumer(capacity, queue)
         val producer = Producer(capacity, queue)
