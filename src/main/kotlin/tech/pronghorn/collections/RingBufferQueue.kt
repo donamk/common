@@ -23,7 +23,6 @@ import java.util.NoSuchElementException
 import java.util.Queue
 
 class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
-    private val logger = LoggingPlugin.get(javaClass)
     val capacity: Int = validateCapacity(requestedCapacity)
     @Suppress("UNCHECKED_CAST")
     private val ring: Array<T?> = Array<Any?>(capacity, { null }) as Array<T?>
@@ -42,6 +41,7 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
             return value
         }
         else {
+            val logger = LoggingPlugin.get(javaClass)
             logger.warn { "RingBuffer capacity should be a power of two, but ($value) requested. Using the next available: ${roundToNextPowerOfTwo(value)}." }
             return roundToNextPowerOfTwo(value)
         }

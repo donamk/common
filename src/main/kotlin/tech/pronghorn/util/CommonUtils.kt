@@ -25,7 +25,17 @@ fun Exception.stackTraceToString(): String {
     return exceptionWriter.toString()
 }
 
-fun runAllIgnoringExceptions(vararg blocks: () -> Unit) {
+inline fun ignoreException(block: () -> Unit){
+    try {
+        block()
+    }
+    catch(ex: Exception) {
+        // no-op
+    }
+}
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun ignoreExceptions(vararg blocks: () -> Unit) {
     blocks.forEach { block ->
         try {
             block()
