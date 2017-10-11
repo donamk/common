@@ -25,6 +25,7 @@ import tech.pronghorn.plugins.internalQueue.InternalQueuePlugin
 import tech.pronghorn.plugins.logging.*
 import tech.pronghorn.plugins.mpscQueue.MpscQueuePlugin
 import tech.pronghorn.plugins.spscQueue.SpscQueuePlugin
+import tech.pronghorn.util.ignoreException
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.util.Properties
@@ -66,16 +67,12 @@ internal object PluginManager {
 
     private fun loadProperties(): Properties {
         val properties = Properties()
-        try {
+        ignoreException {
             val stream = javaClass.classLoader.getResource(PRONGHORN_PROPERTIES)?.openStream()
             if (stream != null) {
                 properties.load(stream)
             }
         }
-        catch (ex: Exception) {
-            // no-op
-        }
-
         return properties
     }
 
