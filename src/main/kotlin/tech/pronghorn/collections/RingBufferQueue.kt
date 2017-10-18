@@ -16,14 +16,11 @@
 
 package tech.pronghorn.collections
 
-import tech.pronghorn.plugins.logging.LoggingPlugin
-import tech.pronghorn.util.isPowerOfTwo
-import tech.pronghorn.util.roundToNextPowerOfTwo
 import java.util.NoSuchElementException
 import java.util.Queue
 
-class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
-    val capacity: Int = validateCapacity(requestedCapacity)
+public class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
+    public val capacity: Int = validatePowerOfTwoCapacity(this, requestedCapacity)
     @Suppress("UNCHECKED_CAST")
     private val ring: Array<T?> = Array<Any?>(capacity, { null }) as Array<T?>
     private val mask = capacity - 1
@@ -31,29 +28,21 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
     private var write = 0
     override val size: Int
         get() = write - read
-    val isFull: Boolean
+    public val isFull: Boolean
         get() = size == capacity
-    val remaining: Int
+    public val remaining: Int
         get() = capacity - size
-
-    private fun validateCapacity(value: Int): Int {
-        if (isPowerOfTwo(value)) {
-            return value
-        }
-        else {
-            val logger = LoggingPlugin.get(javaClass)
-            logger.warn { "RingBuffer capacity should be a power of two, but ($value) requested. Using the next available: ${roundToNextPowerOfTwo(value)}." }
-            return roundToNextPowerOfTwo(value)
-        }
-    }
 
     override fun remove(): T {
         if (isEmpty()) {
-            throw NoSuchElementException()
+            throw NoSuchElementException("remove called on empty RingBufferQueue")
         }
         else {
+            val readLocation = read.and(mask)
             read += 1
-            return ring[(read - 1).and(mask)]!!
+            val result = ring[readLocation]
+            ring[readLocation] = null
+            return result!!
         }
     }
 
@@ -115,7 +104,7 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
 
     override fun element(): T? {
         if (isEmpty()) {
-            throw NoSuchElementException()
+            throw NoSuchElementException("element called on empty RingBufferQueue")
         }
 
         return ring[read.and(mask)]
@@ -123,7 +112,7 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
 
     override fun add(element: T?): Boolean {
         if (isFull) {
-            throw IllegalStateException()
+            throw IllegalStateException("add called on full RingBufferQueue")
         }
 
         ring[write.and(mask)] = element
@@ -145,8 +134,11 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
             null
         }
         else {
+            val readLocation = read.and(mask)
             read += 1
-            ring[(read - 1).and(mask)]
+            val result = ring[readLocation]
+            ring[readLocation] = null
+            return result
         }
     }
 
