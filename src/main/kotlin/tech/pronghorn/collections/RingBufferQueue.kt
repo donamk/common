@@ -52,8 +52,11 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
             throw NoSuchElementException()
         }
         else {
+            val readLocation = read.and(mask)
             read += 1
-            return ring[(read - 1).and(mask)]!!
+            val result = ring[readLocation]
+            ring[readLocation] = null
+            return result!!
         }
     }
 
@@ -145,8 +148,11 @@ class RingBufferQueue<T>(requestedCapacity: Int) : Queue<T> {
             null
         }
         else {
+            val readLocation = read.and(mask)
             read += 1
-            ring[(read - 1).and(mask)]
+            val result = ring[readLocation]
+            ring[readLocation] = null
+            return result
         }
     }
 
