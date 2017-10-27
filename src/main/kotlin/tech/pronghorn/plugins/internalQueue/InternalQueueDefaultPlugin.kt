@@ -17,15 +17,20 @@
 package tech.pronghorn.plugins.internalQueue
 
 import tech.pronghorn.collections.RingBufferQueue
-import java.util.ArrayDeque
+import tech.pronghorn.collections.UnboundedRingBufferQueue
 import java.util.Queue
 
-object InternalQueueDefaultPlugin : InternalQueuePlugin {
-    override fun <T> getBounded(capacity: Int): Queue<T> {
-        return RingBufferQueue(capacity)
+public object InternalQueueDefaultPlugin : InternalQueuePlugin {
+    private class BoundedInternalRingBufferQueue<T>(capacity: Int,
+                                                    private val ringBuffer: RingBufferQueue<T> = RingBufferQueue(capacity)) : BoundedInternalQueue<T>(ringBuffer) {
+        override fun remaining(): Int = ringBuffer.remaining
+    }
+
+    override fun <T> getBounded(capacity: Int): BoundedInternalQueue<T> {
+        return BoundedInternalRingBufferQueue(capacity)
     }
 
     override fun <T> getUnbounded(): Queue<T> {
-        return ArrayDeque()
+        return UnboundedRingBufferQueue()
     }
 }
