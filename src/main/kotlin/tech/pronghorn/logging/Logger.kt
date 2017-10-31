@@ -16,38 +16,38 @@
 
 package tech.pronghorn.logging
 
-abstract class Logger {
-    abstract val name: String
+public abstract class Logger {
+    public abstract val name: String
 
-    abstract val isTraceEnabled: Boolean
-    abstract val isDebugEnabled: Boolean
-    abstract val isInfoEnabled: Boolean
-    abstract val isWarnEnabled: Boolean
-    abstract val isErrorEnabled: Boolean
+    public abstract val isTraceEnabled: Boolean
+    public abstract val isDebugEnabled: Boolean
+    public abstract val isInfoEnabled: Boolean
+    public abstract val isWarnEnabled: Boolean
+    public abstract val isErrorEnabled: Boolean
 
-    abstract protected fun trace(message: String)
-    abstract protected fun debug(message: String)
-    abstract protected fun info(message: String)
-    abstract protected fun warn(message: String)
-    abstract protected fun error(message: String)
+    public abstract fun traceImpl(message: String)
+    public abstract fun debugImpl(message: String)
+    public abstract fun infoImpl(message: String)
+    public abstract fun warnImpl(message: String)
+    public abstract fun errorImpl(message: String)
 
-    fun trace(block: () -> String) {
-        if (isTraceEnabled) trace(block())
+    public inline fun trace(block: () -> String) {
+        if (isTraceEnabled) traceImpl(block())
     }
 
-    fun debug(block: () -> String) {
-        if (isDebugEnabled) debug(block())
+    public inline fun debug(block: () -> String) {
+        if (isDebugEnabled) debugImpl(block())
     }
 
-    fun info(block: () -> String) {
-        if (isInfoEnabled) info(block())
+    public inline fun info(block: () -> String) {
+        if (isInfoEnabled) infoImpl(block())
     }
 
-    fun warn(block: () -> String) {
-        if (isWarnEnabled) warn(block())
+    public inline fun warn(block: () -> String) {
+        if (isWarnEnabled) warnImpl(block())
     }
 
-    fun error(block: () -> String) {
-        if (isErrorEnabled) error(block())
+    public inline fun error(block: () -> String) {
+        if (isErrorEnabled) errorImpl(block())
     }
 }

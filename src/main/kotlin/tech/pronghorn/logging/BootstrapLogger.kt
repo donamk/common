@@ -33,9 +33,9 @@ internal class BootstrapLogger(override val name: String) : Logger() {
     private fun getFormattedMessage(level: String,
                                     message: String): String = "${getFormattedDate()} $level $name - $message"
 
-    override fun trace(message: String) = Unit
-    override fun debug(message: String) = Unit
-    override fun info(message: String) = Unit
-    override fun warn(message: String) = System.err.println(getFormattedMessage("WARN", message))
-    override fun error(message: String) = System.err.println(getFormattedMessage("ERROR", message))
+    override fun traceImpl(message: String) = Unit
+    override fun debugImpl(message: String) = Unit
+    override fun infoImpl(message: String) = Unit
+    override fun warnImpl(message: String) = System.out.println(getFormattedMessage("WARN", message))
+    override fun errorImpl(message: String) = System.out.println(getFormattedMessage("ERROR", message))
 }
