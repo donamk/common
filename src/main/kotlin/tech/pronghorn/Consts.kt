@@ -16,5 +16,5 @@
 
 package tech.pronghorn
 
-const val PRONGHORN_PROPERTIES = "pronghorn.properties"
-const val PRONGHORN_PLUGIN_PREFIX = "pronghorn.plugins"
+public const val PRONGHORN_PROPERTIES = "pronghorn.properties"
+public const val PRONGHORN_PLUGIN_PREFIX = "pronghorn.plugins"

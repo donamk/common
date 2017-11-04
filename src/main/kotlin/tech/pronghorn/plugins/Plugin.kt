@@ -17,8 +17,10 @@
 package tech.pronghorn.plugins
 
 @Suppress("UNCHECKED_CAST")
-abstract class Plugin<T>(val default: T) {
-    fun setPlugin(plugin: T) {
+public abstract class Plugin<T>(public val default: T) {
+    abstract fun getPlugin(): T
+
+    public fun setPlugin(plugin: T) {
         PluginManager.setPlugin(plugin!!)
     }
 }

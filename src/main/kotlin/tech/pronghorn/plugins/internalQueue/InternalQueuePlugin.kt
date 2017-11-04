@@ -20,14 +20,16 @@ import tech.pronghorn.plugins.Plugin
 import tech.pronghorn.plugins.PluginManager
 import java.util.Queue
 
-interface InternalQueuePlugin {
+public interface InternalQueuePlugin {
     companion object : Plugin<InternalQueuePlugin>(InternalQueueDefaultPlugin) {
-        fun <T> getBounded(capacity: Int): Queue<T> = PluginManager.internalQueuePlugin.getBounded(capacity)
+        override fun getPlugin() = PluginManager.internalQueuePlugin
 
-        fun <T> getUnbounded(): Queue<T> = PluginManager.internalQueuePlugin.getUnbounded()
+        public fun <T> getBounded(capacity: Int): BoundedInternalQueue<T> = PluginManager.internalQueuePlugin.getBounded(capacity)
+
+        public fun <T> getUnbounded(): Queue<T> = PluginManager.internalQueuePlugin.getUnbounded()
     }
 
-    fun <T> getBounded(capacity: Int): Queue<T>
+    public fun <T> getBounded(capacity: Int): BoundedInternalQueue<T>
 
-    fun <T> getUnbounded(): Queue<T>
+    public fun <T> getUnbounded(): Queue<T>
 }

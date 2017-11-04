@@ -16,16 +16,46 @@
 
 package tech.pronghorn.plugins.mpscQueue
 
-import java.util.Queue
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
-object MpscQueueDefaultPlugin : MpscQueuePlugin {
-    override fun <T> getBounded(capacity: Int): Queue<T> {
-        return ArrayBlockingQueue(capacity)
+public object MpscQueueDefaultPlugin : MpscQueuePlugin {
+    private class DrainableArrayBlockingQueue<T>(capacity: Int,
+                                                 private val arrayQueue: ArrayBlockingQueue<T> = ArrayBlockingQueue(capacity)) : DrainableQueue<T>(arrayQueue) {
+        override fun drainTo(collection: MutableCollection<T>,
+                             maxElements: Int): Int {
+            return arrayQueue.drainTo(collection, maxElements)
+        }
+
+        override fun fillFrom(collection: Collection<T>): Int {
+            var filled = 0
+            collection.forEach { value ->
+                if(!arrayQueue.offer(value)){
+                    return filled
+                }
+                filled += 1
+            }
+            return filled
+        }
     }
 
-    override fun <T> getUnbounded(): Queue<T> {
-        return LinkedBlockingQueue()
+    private class DrainableLinkedBlockingQueue<T>(private val linkedQueue: LinkedBlockingQueue<T> = LinkedBlockingQueue()) : DrainableQueue<T>(linkedQueue) {
+        override fun drainTo(collection: MutableCollection<T>,
+                             maxElements: Int): Int {
+            return linkedQueue.drainTo(collection, maxElements)
+        }
+
+        override fun fillFrom(collection: Collection<T>): Int {
+            linkedQueue.addAll(collection)
+            return collection.size
+        }
+    }
+
+    override fun <T> getBounded(capacity: Int): DrainableQueue<T> {
+        return DrainableArrayBlockingQueue(capacity)
+    }
+
+    override fun <T> getUnbounded(): DrainableQueue<T> {
+        return DrainableLinkedBlockingQueue()
     }
 }

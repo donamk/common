@@ -20,7 +20,7 @@ import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 
 
-object ConcurrentSetDefaultPlugin : ConcurrentSetPlugin {
+public object ConcurrentSetDefaultPlugin : ConcurrentSetPlugin {
     override fun <T> get(): MutableSet<T> {
         return Collections.newSetFromMap(ConcurrentHashMap())
     }

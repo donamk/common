@@ -20,10 +20,12 @@ import tech.pronghorn.logging.Logger
 import tech.pronghorn.plugins.Plugin
 import tech.pronghorn.plugins.PluginManager
 
-interface LoggingPlugin {
+public interface LoggingPlugin {
     companion object : Plugin<LoggingPlugin>(LoggingDefaultPlugin) {
-        fun get(clazz: Class<*>): Logger = PluginManager.loggingPlugin.get(clazz.simpleName)
+        override fun getPlugin() = PluginManager.loggingPlugin
+
+        public fun get(clazz: Class<*>): Logger = PluginManager.loggingPlugin.get(clazz.simpleName)
     }
 
-    fun get(name: String): Logger
+    public fun get(name: String): Logger
 }

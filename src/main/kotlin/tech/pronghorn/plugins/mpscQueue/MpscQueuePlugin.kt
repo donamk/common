@@ -18,16 +18,17 @@ package tech.pronghorn.plugins.mpscQueue
 
 import tech.pronghorn.plugins.Plugin
 import tech.pronghorn.plugins.PluginManager
-import java.util.Queue
 
-interface MpscQueuePlugin {
+public interface MpscQueuePlugin {
     companion object : Plugin<MpscQueuePlugin>(MpscQueueDefaultPlugin) {
-        fun <T> getBounded(capacity: Int): Queue<T> = PluginManager.mpscQueuePlugin.getBounded(capacity)
+        override fun getPlugin() = PluginManager.mpscQueuePlugin
 
-        fun <T> getUnbounded(): Queue<T> = PluginManager.mpscQueuePlugin.getUnbounded()
+        public fun <T> getBounded(capacity: Int): DrainableQueue<T> = PluginManager.mpscQueuePlugin.getBounded(capacity)
+
+        public fun <T> getUnbounded(): DrainableQueue<T> = PluginManager.mpscQueuePlugin.getUnbounded()
     }
 
-    fun <T> getBounded(capacity: Int): Queue<T>
+    public fun <T> getBounded(capacity: Int): DrainableQueue<T>
 
-    fun <T> getUnbounded(): Queue<T>
+    public fun <T> getUnbounded(): DrainableQueue<T>
 }
