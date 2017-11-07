@@ -19,13 +19,13 @@ package tech.pronghorn.util
 import java.io.PrintWriter
 import java.io.StringWriter
 
-fun Exception.stackTraceToString(): String {
+public fun Exception.stackTraceToString(): String {
     val exceptionWriter = StringWriter()
     printStackTrace(PrintWriter(exceptionWriter))
     return exceptionWriter.toString()
 }
 
-inline fun ignoreException(block: () -> Unit){
+public inline fun ignoreException(block: () -> Unit){
     try {
         block()
     }
@@ -35,7 +35,7 @@ inline fun ignoreException(block: () -> Unit){
 }
 
 @Suppress("NOTHING_TO_INLINE")
-inline fun ignoreExceptions(vararg blocks: () -> Unit) {
+public inline fun ignoreExceptions(vararg blocks: () -> Unit) {
     blocks.forEach { block ->
         try {
             block()
