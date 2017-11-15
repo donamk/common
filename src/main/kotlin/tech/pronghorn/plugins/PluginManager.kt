@@ -21,8 +21,10 @@ import tech.pronghorn.PRONGHORN_PROPERTIES
 import tech.pronghorn.plugins.arrayHash.ArrayHasherPlugin
 import tech.pronghorn.plugins.concurrentMap.ConcurrentMapPlugin
 import tech.pronghorn.plugins.concurrentSet.ConcurrentSetPlugin
+import tech.pronghorn.plugins.spmcMulticaster.SpmcMulticasterPlugin
 import tech.pronghorn.plugins.internalQueue.InternalQueuePlugin
 import tech.pronghorn.plugins.logging.*
+import tech.pronghorn.plugins.spmcQueue.SpmcQueuePlugin
 import tech.pronghorn.plugins.mpscQueue.MpscQueuePlugin
 import tech.pronghorn.plugins.spscQueue.SpscQueuePlugin
 import tech.pronghorn.util.ignoreException
@@ -34,7 +36,7 @@ internal object PluginManager {
     private val properties = loadProperties()
 
     @Volatile
-    var loggingPlugin: LoggingPlugin = BootstrapLoggingPlugin
+    public var loggingPlugin: LoggingPlugin = BootstrapLoggingPlugin
         private set
 
     init {
@@ -56,10 +58,16 @@ internal object PluginManager {
     var concurrentSetPlugin: ConcurrentSetPlugin = loadPlugin(ConcurrentSetPlugin)
         private set
     @Volatile
+    var spmcMulticasterPlugin: SpmcMulticasterPlugin = loadPlugin(SpmcMulticasterPlugin)
+        private set
+    @Volatile
     var internalQueuePlugin: InternalQueuePlugin = loadPlugin(InternalQueuePlugin)
         private set
     @Volatile
     var mpscQueuePlugin: MpscQueuePlugin = loadPlugin(MpscQueuePlugin)
+        private set
+    @Volatile
+    var spmcQueuePlugin: SpmcQueuePlugin = loadPlugin(SpmcQueuePlugin)
         private set
     @Volatile
     var spscQueuePlugin: SpscQueuePlugin = loadPlugin(SpscQueuePlugin)
@@ -105,14 +113,16 @@ internal object PluginManager {
         return plugin.default
     }
 
-    fun setPlugin(plugin: Any): Boolean {
+    public fun setPlugin(plugin: Any): Boolean {
         when (plugin) {
             is LoggingPlugin -> loggingPlugin = plugin
             is ArrayHasherPlugin -> arrayHasherPlugin = plugin
             is ConcurrentMapPlugin -> concurrentMapPlugin = plugin
             is ConcurrentSetPlugin -> concurrentSetPlugin = plugin
+            is SpmcMulticasterPlugin -> spmcMulticasterPlugin = plugin
             is InternalQueuePlugin -> internalQueuePlugin = plugin
             is MpscQueuePlugin -> mpscQueuePlugin = plugin
+            is SpmcQueuePlugin -> spmcQueuePlugin = plugin
             is SpscQueuePlugin -> spscQueuePlugin = plugin
             else -> return false
         }
