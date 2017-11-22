@@ -19,10 +19,11 @@ package tech.pronghorn.test
 import java.time.Duration
 
 private val defaultEventually: Duration = Duration.ofSeconds(1)
-private val interval: Duration = Duration.ofMillis(10)
+private val defaultInterval: Duration = Duration.ofMillis(10)
 
-fun eventually(duration: Duration = defaultEventually,
-               block: () -> Unit) {
+public fun eventually(duration: Duration = defaultEventually,
+                      interval: Duration = defaultInterval,
+                      block: () -> Unit) {
     val end = System.currentTimeMillis() + duration.toMillis()
 
     var times = 0
@@ -44,5 +45,6 @@ fun eventually(duration: Duration = defaultEventually,
 
         times++
     }
-    throw AssertionError("Test failed after ${duration.toMillis()} ms. Attempted $times times.\nLast exception: ${lastException?.message}")
+
+    throw AssertionError("Test failed after ${duration.toMillis()} ms. Attempted $times times.\nLast exception: $lastException")
 }
