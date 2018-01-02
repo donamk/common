@@ -20,15 +20,13 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.RepeatedTest
 import tech.pronghorn.plugins.Consumer
 import tech.pronghorn.plugins.Producer
-import tech.pronghorn.test.PronghornTest
-import tech.pronghorn.test.repeatCount
+import tech.pronghorn.test.*
 import tech.pronghorn.util.roundToNextPowerOfTwo
+import java.util.Queue
 
 class MpscQueuePluginTests : PronghornTest() {
-    /*
-     * Tests the default mpsc queue plugin returns a bounded queue
-     */
-    @RepeatedTest(repeatCount)
+    // Tests the default mpsc queue plugin returns a bounded queue for getBounded
+    @RepeatedTest(lightRepeatCount)
     fun mpscQueuePluginBounded() {
         val capacity = roundToNextPowerOfTwo(4 + random.nextInt(64))
         val queue = MpscQueuePlugin.getBounded<String>(capacity)
@@ -43,16 +41,25 @@ class MpscQueuePluginTests : PronghornTest() {
         assertFalse(queue.offer("foo"))
     }
 
-    /*
-     * Tests the default mpsc queue plugin is appropriately thread-safe
-     */
-    @RepeatedTest(repeatCount)
-    fun mpscQueuePluginThreadSafe() {
-        val capacity = 64
-        val queue = MpscQueuePlugin.getBounded<Int>(capacity)
+    // Tests the mpsc queue plugin returns an unbounded queue for getUnbounded
+    @RepeatedTest(heavyRepeatCount)
+    fun mpscQueuePluginUnbounded() {
+        val queue = MpscQueuePlugin.getUnbounded<String>()
+        val toAdd = 1024 * 1024
 
-        val toConsume = capacity
-        val toProduce = capacity / 2
+        var x = 0
+        while (x < toAdd) {
+            queue.add("$x")
+            x += 1
+        }
+
+        assertEquals(toAdd, queue.size)
+    }
+
+    fun checkQueueThreadSafety(queue: Queue<Int>,
+                               count: Int) {
+        val toConsume = count
+        val toProduce = count / 2
 
         val consumer = Consumer(toConsume, queue)
 
@@ -66,5 +73,22 @@ class MpscQueuePluginTests : PronghornTest() {
         assertEquals(toConsume, consumer.consumedCount)
         assertEquals(toProduce, producerA.producedCount)
         assertEquals(toProduce, producerB.producedCount)
+    }
+
+    // Tests the default bounded mpsc queue plugin is appropriately thread-safe
+    @RepeatedTest(heavyRepeatCount)
+    fun mpscQueuePluginBoundedThreadSafeTest() {
+        val capacity = 64
+        val queue = MpscQueuePlugin.getBounded<Int>(capacity)
+
+        checkQueueThreadSafety(queue, capacity)
+    }
+
+    // Tests the default unbounded mpsc queue plugin is appropriately thread-safe
+    @RepeatedTest(heavyRepeatCount)
+    fun mpscQueuePluginUnboundedThreadSafeTest() {
+        val queue = MpscQueuePlugin.getUnbounded<Int>()
+
+        checkQueueThreadSafety(queue, 1024 * 16)
     }
 }

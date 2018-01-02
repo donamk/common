@@ -19,16 +19,13 @@ package tech.pronghorn.plugins.spscQueue
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.RepeatedTest
 import tech.pronghorn.plugins.internalQueue.InternalQueuePlugin
-import tech.pronghorn.test.PronghornTest
-import tech.pronghorn.test.repeatCount
+import tech.pronghorn.test.*
 import tech.pronghorn.util.roundToNextPowerOfTwo
 
 class InternalQueuePluginTests : PronghornTest() {
-    /*
-     * Tests the default internal queue plugin returns a bounded queue
-     */
-    @RepeatedTest(repeatCount)
-    fun internalQueuePluginBounded() {
+    // Tests the internal queue plugin returns a bounded queue for getBounded
+    @RepeatedTest(lightRepeatCount)
+    fun internalQueuePluginBoundedTest() {
         val capacity = roundToNextPowerOfTwo(4 + random.nextInt(64))
         val queue = InternalQueuePlugin.getBounded<String>(capacity)
 
@@ -40,5 +37,20 @@ class InternalQueuePluginTests : PronghornTest() {
 
         assertEquals(capacity, queue.size)
         assertFalse(queue.offer("foo"))
+    }
+
+    // Tests the internal queue plugin returns an unbounded queue for getUnbounded
+    @RepeatedTest(heavyRepeatCount)
+    fun internalQueuePluginUnboundedTest() {
+        val queue = InternalQueuePlugin.getUnbounded<String>()
+        val toAdd = 1024 * 1024
+
+        var x = 0
+        while (x < toAdd) {
+            queue.add("$x")
+            x += 1
+        }
+
+        assertEquals(toAdd, queue.size)
     }
 }

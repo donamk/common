@@ -19,14 +19,12 @@ package tech.pronghorn.plugins.arrayHash
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.RepeatedTest
 import tech.pronghorn.test.PronghornTest
-import tech.pronghorn.test.repeatCount
+import tech.pronghorn.test.lightRepeatCount
 
 class ArrayHasherPluginTests : PronghornTest() {
-    /*
-     * Tests the default array hashing plugin creates proper values.
-     */
-    @RepeatedTest(repeatCount)
-    fun arrayHashPlugin() {
+    // Tests the default array hashing plugin creates proper values.
+    @RepeatedTest(lightRepeatCount)
+    fun arrayHashPluginTest() {
         val hasher = ArrayHasherPlugin.get()
         val fooA = "foo".toByteArray(Charsets.US_ASCII)
         val fooB = "foo".toByteArray(Charsets.US_ASCII)

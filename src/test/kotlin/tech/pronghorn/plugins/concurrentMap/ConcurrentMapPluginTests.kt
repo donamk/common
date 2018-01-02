@@ -19,15 +19,13 @@ package tech.pronghorn.plugins.concurrentMap
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.RepeatedTest
 import tech.pronghorn.test.PronghornTest
-import tech.pronghorn.test.repeatCount
+import tech.pronghorn.test.lightRepeatCount
 import kotlin.concurrent.thread
 
 class ConcurrentMapPluginTests : PronghornTest() {
-    /*
-     * Tests the default concurrent map plugin functions properly.
-     */
-    @RepeatedTest(repeatCount)
-    fun concurrentMapPlugin() {
+    // Tests the default concurrent map plugin functions properly.
+    @RepeatedTest(lightRepeatCount)
+    fun concurrentMapPluginTest() {
         val map = ConcurrentMapPlugin.get<String, Int>()
 
         val threadA = thread(start = false) {

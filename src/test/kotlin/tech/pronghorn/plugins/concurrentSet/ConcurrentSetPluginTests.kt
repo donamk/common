@@ -19,15 +19,13 @@ package tech.pronghorn.plugins.concurrentSet
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.RepeatedTest
 import tech.pronghorn.test.PronghornTest
-import tech.pronghorn.test.repeatCount
+import tech.pronghorn.test.lightRepeatCount
 import kotlin.concurrent.thread
 
 class ConcurrentSetPluginTests : PronghornTest() {
-    /*
-     * Tests the default concurrent set plugin functions properly.
-     */
-    @RepeatedTest(repeatCount)
-    fun concurrentMapPlugin() {
+    // Tests the default concurrent set plugin functions properly.
+    @RepeatedTest(lightRepeatCount)
+    fun concurrentMapPluginTest() {
         val map = ConcurrentSetPlugin.get<String>()
 
         val threadA = thread(start = false) {

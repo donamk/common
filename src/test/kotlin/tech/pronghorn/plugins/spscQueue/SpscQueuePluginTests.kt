@@ -20,16 +20,16 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.RepeatedTest
 import tech.pronghorn.plugins.Consumer
 import tech.pronghorn.plugins.Producer
-import tech.pronghorn.test.PronghornTest
-import tech.pronghorn.test.repeatCount
+import tech.pronghorn.test.*
 import tech.pronghorn.util.roundToNextPowerOfTwo
+import java.util.Queue
 
 class SpscQueuePluginTests : PronghornTest() {
     /*
-     * Tests the default spsp queue plugin returns a bounded queue
+     * Tests the default spsc queue plugin returns a bounded queue for getBounded
      */
-    @RepeatedTest(repeatCount)
-    fun spscQueuePluginBounded() {
+    @RepeatedTest(heavyRepeatCount)
+    fun spscQueuePluginBoundedTest() {
         val capacity = roundToNextPowerOfTwo(4 + random.nextInt(64))
         val queue = SpscQueuePlugin.getBounded<String>(capacity)
 
@@ -44,21 +44,53 @@ class SpscQueuePluginTests : PronghornTest() {
     }
 
     /*
-     * Tests the default spsp queue plugin is appropriately thread-safe
+     * Tests the spsc queue plugin returns an unbounded queue for getUnbounded
      */
-    @RepeatedTest(repeatCount)
-    fun spscQueuePluginThreadSafe() {
-        val capacity = 64
-        val queue = SpscQueuePlugin.getBounded<Int>(capacity)
+    @RepeatedTest(heavyRepeatCount)
+    fun spscQueuePluginUnboundedTest() {
+        val queue = SpscQueuePlugin.getUnbounded<String>()
+        val toAdd = 1024 * 1024
 
-        val consumer = Consumer(capacity, queue)
-        val producer = Producer(capacity, queue)
+        var x = 0
+        while (x < toAdd) {
+            queue.add("$x")
+            x += 1
+        }
+
+        assertEquals(toAdd, queue.size)
+    }
+
+    fun checkQueueThreadSafety(queue: Queue<Int>,
+                               count: Int) {
+        val consumer = Consumer(count, queue)
+        val producer = Producer(count, queue)
 
         val threads = listOf(consumer, producer)
         threads.forEach(Thread::start)
         threads.forEach { thread -> thread.join(1000) }
 
-        assertEquals(capacity, consumer.consumedCount)
-        assertEquals(capacity, producer.producedCount)
+        assertEquals(count, consumer.consumedCount)
+        assertEquals(count, producer.producedCount)
+    }
+
+    /*
+     * Tests the default bounded spsc queue plugin is appropriately thread-safe
+     */
+    @RepeatedTest(heavyRepeatCount)
+    fun spscQueueBoundedPluginThreadSafeTest() {
+        val capacity = 64
+        val queue = SpscQueuePlugin.getBounded<Int>(capacity)
+
+        checkQueueThreadSafety(queue, capacity)
+    }
+
+    /*
+     * Tests the default unbounded spsc queue plugin is appropriately thread-safe
+     */
+    @RepeatedTest(heavyRepeatCount)
+    fun spscQueueUnboundedPluginThreadSafeTest() {
+        val queue = SpscQueuePlugin.getUnbounded<Int>()
+
+        checkQueueThreadSafety(queue, 1024 * 16)
     }
 }
