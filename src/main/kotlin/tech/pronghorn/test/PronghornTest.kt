@@ -16,15 +16,25 @@
 
 package tech.pronghorn.test
 
+import tech.pronghorn.plugins.PluginManager
+import tech.pronghorn.plugins.logging.LoggingDefaultPlugin
 import tech.pronghorn.plugins.logging.LoggingPlugin
 import java.util.Random
 
-const val repeatCount: Int = 1
+public const val lightRepeatCount = 64
+public const val heavyRepeatCount = 4
 
-abstract class PronghornTest(val forcedSeed: Long? = null) {
+public abstract class PronghornTest(public val forcedSeed: Long? = null) {
     protected val logger = LoggingPlugin.get(javaClass)
 
-    val random by lazy {
+    protected fun ignoreLogging(block: () -> Unit) {
+        val prePlugin = PluginManager.loggingPlugin
+        LoggingPlugin.setPlugin(LoggingDefaultPlugin)
+        block()
+        LoggingPlugin.setPlugin(prePlugin)
+    }
+
+    protected val random by lazy {
         val seed = forcedSeed ?: Random().nextLong()
         logger.info { "Random seed: $seed" }
         Random(seed)
