@@ -20,7 +20,7 @@ import java.util.Queue
 import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
-object SpscQueueDefaultPlugin : SpscQueuePlugin {
+public object SpscQueueDefaultPlugin : SpscQueuePlugin {
     override fun <T> getBounded(capacity: Int): Queue<T> {
         return ArrayBlockingQueue(capacity)
     }

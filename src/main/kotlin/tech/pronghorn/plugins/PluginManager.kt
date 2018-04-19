@@ -21,7 +21,6 @@ import tech.pronghorn.PRONGHORN_PROPERTIES
 import tech.pronghorn.plugins.arrayHash.ArrayHasherPlugin
 import tech.pronghorn.plugins.concurrentMap.ConcurrentMapPlugin
 import tech.pronghorn.plugins.concurrentSet.ConcurrentSetPlugin
-import tech.pronghorn.plugins.spmcMulticaster.SpmcMulticasterPlugin
 import tech.pronghorn.plugins.internalQueue.InternalQueuePlugin
 import tech.pronghorn.plugins.logging.*
 import tech.pronghorn.plugins.spmcQueue.SpmcQueuePlugin
@@ -56,9 +55,6 @@ internal object PluginManager {
         private set
     @Volatile
     var concurrentSetPlugin: ConcurrentSetPlugin = loadPlugin(ConcurrentSetPlugin)
-        private set
-    @Volatile
-    var spmcMulticasterPlugin: SpmcMulticasterPlugin = loadPlugin(SpmcMulticasterPlugin)
         private set
     @Volatile
     var internalQueuePlugin: InternalQueuePlugin = loadPlugin(InternalQueuePlugin)
@@ -119,7 +115,6 @@ internal object PluginManager {
             is ArrayHasherPlugin -> arrayHasherPlugin = plugin
             is ConcurrentMapPlugin -> concurrentMapPlugin = plugin
             is ConcurrentSetPlugin -> concurrentSetPlugin = plugin
-            is SpmcMulticasterPlugin -> spmcMulticasterPlugin = plugin
             is InternalQueuePlugin -> internalQueuePlugin = plugin
             is MpscQueuePlugin -> mpscQueuePlugin = plugin
             is SpmcQueuePlugin -> spmcQueuePlugin = plugin

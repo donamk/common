@@ -20,14 +20,16 @@ import tech.pronghorn.plugins.Plugin
 import tech.pronghorn.plugins.PluginManager
 import java.util.Queue
 
-interface SpscQueuePlugin {
+public interface SpscQueuePlugin {
     companion object : Plugin<SpscQueuePlugin>(SpscQueueDefaultPlugin) {
-        fun <T> getBounded(capacity: Int): Queue<T> = PluginManager.spscQueuePlugin.getBounded(capacity)
+        override fun getPlugin() = PluginManager.spscQueuePlugin
 
-        fun <T> getUnbounded(): Queue<T> = PluginManager.spscQueuePlugin.getUnbounded()
+        public fun <T> getBounded(capacity: Int): Queue<T> = PluginManager.spscQueuePlugin.getBounded(capacity)
+
+        public fun <T> getUnbounded(): Queue<T> = PluginManager.spscQueuePlugin.getUnbounded()
     }
 
-    fun <T> getBounded(capacity: Int): Queue<T>
+    public fun <T> getBounded(capacity: Int): Queue<T>
 
-    fun <T> getUnbounded(): Queue<T>
+    public fun <T> getUnbounded(): Queue<T>
 }
